@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物流计费系统 - 领域模型关系图</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        .description {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            margin: 20px 0;
+        }
+        .concept-box {
+            background-color: #e8f5e9;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .concept-box h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        ul {
+            line-height: 1.8;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .mermaid {
+            text-align: center;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚚 物流计费系统 - 领域模型关系图</h1>
+        
+        <div class="description">
+            <p>本系统是一个灵活的物流计费引擎，支持多种计费模式、阶梯计价、动态规则匹配等功能。</p>
+        </div>
+
+        <h2>📊 核心实体关系图</h2>
+        <div class="mermaid">
+erDiagram
+    BillingTemplate ||--o{ BillingItem : "包含(1:N)"
+    BillingItem }o--|| BillingFormula : "使用(N:1)"
+    BillingFactor ||--o{ BillingFormula : "作为输入"
+    BillingDimension ||--o{ BillingTemplate : "匹配条件"
+    BillingRecord }o--|| BillingTemplate : "使用"
+    
+    BillingTemplate {
+        Long id PK
+        String templateCode "模板编码"
+        String templateName "模板名称"
+        String bizType "业务类型"
+        String dimensionConfig "维度配置"
+        Integer priority "优先级"
+        Integer status "状态"
+    }
+    
+    BillingItem {
+        Long id PK
+        Long templateId FK
+        String itemCode "项目编码"
+        String itemName "项目名称"
+        String itemType "项目类型"
+        Long formulaId FK
+        String calculateCondition "计算条件"
+    }
+    
+    BillingFormula {
+        Long id PK
+        String formulaCode "公式编码"
+        String formulaType "公式类型"
+        String formulaExpression "表达式"
+        String inputFactors "输入要素"
+        String ladderConfig "阶梯配置"
+    }
+    
+    BillingFactor {
+        Long id PK
+        String factorCode "要素编码"
+        String factorName "要素名称"
+        String factorType "要素类型"
+        String unit "单位"
+    }
+    
+    BillingDimension {
+        Long id PK
+        String dimensionCode "维度编码"
+        String dimensionName "维度名称"
+        Long parentId "父维度"
+        Integer level "层级"
+        String dimensionValues "维度值"
+    }
+    
+    BillingRecord {
+        Long id PK
+        String bizNo "业务单号"
+        String templateCode "模板编码"
+        String factors "计费要素"
+        String dimensions "计费维度"
+        BigDecimal totalFee "总费用"
+        Integer status "状态"
+    }
+        </div>
+
+        <h2>🏗️ 领域模型概念</h2>
+        
+        <div class="concept-box">
+            <h3>1️⃣ BillingTemplate（计费模板）</h3>
+            <ul>
+                <li><strong>作用</strong>：定义特定业务场景下的计费规则集合</li>
+                <li><strong>特点</strong>：通过维度配置支持条件匹配，支持优先级控制</li>
+                <li><strong>示例</strong>：标准物流计费模板、电商订单计费模板、冷链运输计费模板</li>
+            </ul>
+        </div>
+
+        <div class="concept-box">
+            <h3>2️⃣ BillingItem（计费项目）</h3>
+            <ul>
+                <li><strong>作用</strong>：模板下的具体收费项</li>
+                <li><strong>特点</strong>：每个项目关联一个计费公式，支持计算条件控制</li>
+                <li><strong>示例</strong>：运费、保价费、包装费、仓储费</li>
+            </ul>
+        </div>
+
+        <div class="concept-box">
+            <h3>3️⃣ BillingFormula（计费公式）</h3>
+            <ul>
+                <li><strong>作用</strong>：定义具体的计算逻辑</li>
+                <li><strong>支持模式</strong>：
+                    <ul>
+                        <li>固定值</li>
+                        <li>线性计算（基础价格 + 单价 × 数量）</li>
+                        <li>阶梯计算（根据区间不同单价）</li>
+                        <li>分段计算（每个区间独立计算）</li>
+                        <li>表达式计算（MVEL表达式）</li>
+                        <li>查表计算（价格表查询）</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="concept-box">
+            <h3>4️⃣ BillingFactor（计费要素）</h3>
+            <ul>
+                <li><strong>作用</strong>：参与计费的最小计算单元</li>
+                <li><strong>特点</strong>：定义了各种维度的数据类型和单位</li>
+                <li><strong>示例</strong>：重量(kg)、距离(km)、体积(m³)、时效、地区</li>
+            </ul>
+        </div>
+
+        <div class="concept-box">
+            <h3>5️⃣ BillingDimension（计费维度）</h3>
+            <ul>
+                <li><strong>作用</strong>：用于计费规则匹配的条件维度</li>
+                <li><strong>特点</strong>：支持层级结构，支持多选</li>
+                <li><strong>示例</strong>：地区、客户等级、商品类型、时段</li>
+            </ul>
+        </div>
+
+        <div class="concept-box">
+            <h3>6️⃣ BillingRecord（计费记录）</h3>
+            <ul>
+                <li><strong>作用</strong>：记录每次计费的结果</li>
+                <li><strong>内容</strong>：保存计费要素、维度、明细等信息</li>
+                <li><strong>用途</strong>：用于审计和追溯</li>
+            </ul>
+        </div>
+
+        <h2>🔄 计费流程</h2>
+        <div class="mermaid">
+flowchart TD
+    A[业务单据] --> B[提取计费要素和维度]
+    B --> C{匹配BillingTemplate}
+    C -->|命中| D[加载模板的BillingItem列表]
+    C -->|未命中| E[使用默认模板]
+    E --> D
+    D --> F[遍历BillingItem]
+    F --> G{检查计算条件}
+    G -->|满足| H[执行BillingFormula计算]
+    G -->|不满足| I[跳过该项]
+    H --> J[累加计算结果]
+    I --> K{是否还有项目}
+    J --> K
+    K -->|是| F
+    K -->|否| L[生成BillingRecord]
+    L --> M[返回计费结果]
+        </div>
+
+        <h2>📋 枚举类型</h2>
+        
+        <h3>BizTypeEnum（业务类型）</h3>
+        <ul>
+            <li><code>E_COMMERCE_ORDER</code> - 电商订单</li>
+            <li><code>LOGISTICS_WAYBILL</code> - 物流运单</li>
+            <li><code>WAREHOUSE_FEE</code> - 仓储费用</li>
+            <li><code>VALUE_ADDED_SERVICE</code> - 增值服务</li>
+        </ul>
+
+        <h3>FactorTypeEnum（要素类型）</h3>
+        <ul>
+            <li><code>NUMERIC</code> - 数值型</li>
+            <li><code>ENUM</code> - 枚举型</li>
+            <li><code>DATE</code> - 日期型</li>
+            <li><code>BOOLEAN</code> - 布尔型</li>
+            <li><code>TEXT</code> - 文本型</li>
+        </ul>
+
+        <h3>FormulaTypeEnum（公式类型）</h3>
+        <ul>
+            <li><code>FIXED</code> - 固定值</li>
+            <li><code>LINEAR</code> - 线性计算</li>
+            <li><code>LADDER</code> - 阶梯计算</li>
+            <li><code>SEGMENT</code> - 分段计算</li>
+            <li><code>EXPRESSION</code> - 表达式计算</li>
+            <li><code>TABLE_LOOKUP</code> - 查表计算</li>
+        </ul>
+
+        <h2>💡 典型场景示例</h2>
+        
+        <div class="concept-box">
+            <h3>场景1：标准物流运费计算</h3>
+            <pre>
+模板：标准物流运费模板
+维度：{region: "华北地区", customerLevel: "普通"}
+项目：
+  - 基础运费（固定值：10元）
+  - 重量运费（线性：单价 * 重量）
+  - 距离运费（阶梯：按距离区间计算）
+要素：{weight: 50kg, distance: 200km}
+            </pre>
+        </div>
+
+        <div class="concept-box">
+            <h3>场景2：冷链运输计费</h3>
+            <pre>
+模板：冷链运输计费模板
+维度：{productType: "冷链", temperature: "冷冻"}
+项目：
+  - 基础运费
+  - 温控费用（根据温度等级）
+  - 时效加急费
+要素：{weight: 100kg, distance: 500km, temperature: "-18℃", urgency: "次日达"}
+            </pre>
+        </div>
+
+        <h2>✨ 系统特点</h2>
+        <ul>
+            <li><strong>高度可配置</strong>：支持动态配置计费规则，无需修改代码</li>
+            <li><strong>灵活的计算模式</strong>：支持多种计算方式，适应复杂计费场景</li>
+            <li><strong>维度匹配</strong>：通过维度条件自动匹配最合适的计费模板</li>
+            <li><strong>版本管理</strong>：模板和公式支持版本控制</li>
+            <li><strong>审计追溯</strong>：完整记录计费过程和结果</li>
+            <li><strong>可扩展性</strong>：通过业务类型和要素类型支持业务扩展</li>
+        </ul>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            },
+            erDiagram: {
+                useMaxWidth: true
+            }
+        });
+    </script>
+</body>
+</html>
