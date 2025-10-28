@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.xiupitter.billing</groupId>
+        <artifactId>xiupitter-bill-engine</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>billing-engine-service</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Billing Engine Service</name>
+    <description>计费引擎服务：核心计费执行引擎</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.xiupitter.billing</groupId>
+            <artifactId>billing-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xiupitter.billing</groupId>
+            <artifactId>billing-api</artifactId>
+        </dependency>
+
+        <!-- 直接依赖其他服务模块 -->
+        <dependency>
+            <groupId>com.xiupitter.billing</groupId>
+            <artifactId>billing-factor-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xiupitter.billing</groupId>
+            <artifactId>billing-template-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xiupitter.billing</groupId>
+            <artifactId>billing-formula-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xiupitter.billing</groupId>
+            <artifactId>billing-excel-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Spring Boot Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- MyBatis Plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- Druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- MVEL -->
+        <dependency>
+            <groupId>org.mvel</groupId>
+            <artifactId>mvel2</artifactId>
+            <version>2.5.0.Final</version>
+        </dependency>
+
+        <!-- Redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.7.18</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
