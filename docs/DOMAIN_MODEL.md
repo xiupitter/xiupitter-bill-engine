@@ -251,6 +251,165 @@ BillingTemplate 1:N BillingItem
 - EXPRESSION（表达式计算）
 - TABLE_LOOKUP（查表计算）
 
+### FactorCodeEnum（计费因子编码）
+
+计费因子是参与计费计算的实际数值，用于公式计算。以下是物流计费系统中常见的计费因子：
+
+#### 重量相关
+- **WEIGHT**（重量，kg）- 货物实际重量
+- **CHARGEABLE_WEIGHT**（计费重量，kg）- 体积重量和实际重量的较大值
+- **VOLUMETRIC_WEIGHT**（体积重量，kg）- 根据体积换算的重量
+- **NET_WEIGHT**（净重，kg）- 除去包装后的重量
+- **GROSS_WEIGHT**（毛重，kg）- 包含包装的重量
+
+#### 距离相关
+- **DISTANCE**（距离，km）- 运输距离
+- **INITIAL_DISTANCE**（起始距离，km）- 起始计费距离
+- **EXCESS_DISTANCE**（超距离，km）- 超出基础距离的部分
+
+#### 体积相关
+- **VOLUME**（体积，m³）- 货物总体积
+- **LENGTH**（长度，m）
+- **WIDTH**（宽度，m）
+- **HEIGHT**（高度，m）
+- **AREA**（面积，m²）
+
+#### 数量相关
+- **QUANTITY**（件数，件）- 货物件数
+- **BOX_COUNT**（箱数，箱）
+- **PALLET_COUNT**（托盘数，托）
+- **PACKAGE_COUNT**（包裹数，个）
+
+#### 时效相关
+- **TIME_TYPE**（时效等级）- 如：标准、加急、次日达等（枚举型）
+- **PROMISED_TIME**（承诺时效，小时）
+- **ACTUAL_TIME**（实际时效，小时）
+- **OVERTIME**（超时时间，小时）- 超出承诺时效的时间
+
+#### 价值相关
+- **GOODS_VALUE**（货物价值，元）- 货物申报价值
+- **INSURED_VALUE**（保价金额，元）- 保价服务的保额
+- **FREIGHT_AMOUNT**（运费金额，元）- 基础运费
+
+#### 温度相关（冷链）
+- **TEMPERATURE**（温度要求，℃）- 要求的运输温度
+- **TEMPERATURE_LEVEL**（温度等级）- 如：常温、冷藏、冷冻（枚举型）
+
+#### 仓储相关
+- **STORAGE_DAYS**（仓储天数，天）
+- **STORAGE_VOLUME**（仓储体积，m³）
+- **STORAGE_WEIGHT**（仓储重量，kg）
+- **STORAGE_AREA**（仓储面积，m²）
+- **INBOUND_COUNT**（进仓次数，次）
+- **OUTBOUND_COUNT**（出仓次数，次）
+- **TURNOVER_COUNT**（库存周转次数，次）
+
+#### 服务相关
+- **IS_INSURED**（是否保价）- 布尔型
+- **IS_COD**（是否代收货款）- 布尔型
+- **IS_PICKUP**（是否上门取件）- 布尔型
+- **IS_DELIVERY**（是否送货上门）- 布尔型
+- **IS_UPSTAIRS**（是否上楼服务）- 布尔型
+- **IS_NIGHT_DELIVERY**（是否夜间配送）- 布尔型
+- **IS_HOLIDAY_DELIVERY**（是否节假日配送）- 布尔型
+- **COD_AMOUNT**（代收货款金额，元）
+- **UPSTAIRS_FLOOR**（上楼楼层数，层）
+
+#### 包装相关
+- **PACKAGE_TYPE**（包装类型）- 如：纸箱、木箱、编织袋等（枚举型）
+- **PACKAGE_QUANTITY**（包装件数，件）
+- **PACKAGE_FEE**（包装费用，元）
+
+#### 特殊处理相关
+- **IS_FRAGILE**（是否易碎品）- 布尔型
+- **IS_HAZARDOUS**（是否危险品）- 布尔型
+- **IS_LIQUID**（是否液体）- 布尔型
+- **IS_OVERSIZED**（是否超大件）- 布尔型
+- **IS_OVERWEIGHT**（是否超重件）- 布尔型
+
+#### 日期时间相关
+- **ORDER_TIME**（下单时间）- 日期型
+- **PICKUP_TIME**（取件时间）- 日期型
+- **SHIP_TIME**（发货时间）- 日期型
+- **ARRIVAL_TIME**（到货时间）- 日期型
+- **DELIVERY_TIME**（配送时间）- 日期型
+- **INBOUND_TIME**（入库时间）- 日期型
+- **OUTBOUND_TIME**（出库时间）- 日期型
+
+#### 地址相关
+- **ORIGIN_ADDRESS**（始发地地址）- 文本型
+- **DESTINATION_ADDRESS**（目的地地址）- 文本型
+- **ORIGIN_POSTCODE**（始发地邮编）- 文本型
+- **DESTINATION_POSTCODE**（目的地邮编）- 文本型
+
+### DimensionCodeEnum（计费维度编码）
+
+计费维度用于匹配计费模板，决定使用哪个计费规则。以下是物流计费系统中常见的计费维度：
+
+#### 地区维度
+- **ORIGIN_REGION**（始发地地区）- 如：华东、华南、华北等
+- **DESTINATION_REGION**（目的地地区）- 如：华东、华南、华北等
+- **ORIGIN_PROVINCE**（始发地省份）
+- **DESTINATION_PROVINCE**（目的地省份）
+- **ORIGIN_CITY**（始发地城市）
+- **DESTINATION_CITY**（目的地城市）
+- **ORIGIN_AREA**（始发地区域）- 如：市区、郊区、偏远地区
+- **DESTINATION_AREA**（目的地区域）- 如：市区、郊区、偏远地区
+- **TRANSPORT_ROUTE**（运输路线）- 如：同城、省内、跨省、国际
+
+#### 客户维度
+- **CUSTOMER_LEVEL**（客户等级）- 如：VIP、普通、新客户
+- **CUSTOMER_TYPE**（客户类型）- 如：个人、企业、平台
+- **CUSTOMER_INDUSTRY**（客户行业）- 如：电商、制造业、零售业
+- **IS_CONTRACT_CUSTOMER**（是否签约客户）
+- **MONTHLY_SHIPMENT_LEVEL**（月发货量等级）- 如：高、中、低
+
+#### 商品维度
+- **PRODUCT_TYPE**（商品类型）- 如：普通货物、易碎品、危险品、液体
+- **PRODUCT_CATEGORY**（商品类别）- 如：食品、服装、电子产品、家具
+- **PRODUCT_VALUE_LEVEL**（商品价值等级）- 如：高价值、中价值、低价值
+
+#### 服务维度
+- **SERVICE_TYPE**（服务类型）- 如：标准、加急、特快
+- **TRANSPORT_MODE**（运输方式）- 如：公路、铁路、航空、海运
+- **DELIVERY_MODE**（配送方式）- 如：自提、送货上门、驿站代收
+- **SPECIAL_HANDLING**（特殊处理）- 如：易碎、危险品、温控
+
+#### 时段维度
+- **ORDER_TIME_SLOT**（下单时段）- 如：工作日、周末、节假日
+- **DELIVERY_TIME_SLOT**（配送时段）- 如：工作日、周末、节假日、夜间
+- **SEASON**（季节）- 如：春季、夏季、秋季、冬季
+- **PEAK_PERIOD**（高峰期）- 如：双十一、双十二、春节等
+- **TIME_PERIOD**（时间段）- 如：8:00-18:00、18:00-22:00、22:00-8:00
+
+#### 仓储维度
+- **WAREHOUSE_TYPE**（仓库类型）- 如：普通仓、恒温仓、冷库
+- **STORAGE_ZONE**（仓储区域）- 如：A区、B区、C区
+- **STORAGE_GOODS_TYPE**（货物类型）- 如：标准货、特殊货、危险品
+
+#### 渠道维度
+- **ORDER_CHANNEL**（订单渠道）- 如：官网、APP、小程序、第三方平台
+- **ORDER_PLATFORM**（下单平台）- 如：淘宝、京东、自有平台
+
+#### 业务维度
+- **BIZ_TYPE**（业务类型）- 如：电商订单、物流运单、仓储费用、增值服务
+- **ORDER_TYPE**（订单类型）- 如：普通订单、批量订单、合同订单
+- **PAYMENT_METHOD**（支付方式）- 如：在线支付、货到付款、月结
+- **SETTLEMENT_METHOD**（结算方式）- 如：现结、月结、季结
+
+#### 其他维度
+- **PACKAGE_REQUIREMENT**（包装要求）- 如：标准包装、加固包装、定制包装
+- **WEIGHT_LEVEL**（重量等级）- 如：轻货、中货、重货
+- **VOLUME_LEVEL**（体积等级）- 如：小件、中件、大件、超大件
+- **DISTANCE_LEVEL**（距离等级）- 如：同城、短途、中途、长途
+- **IS_BATCH_ORDER**（是否批量订单）
+- **IS_RETURN_ORDER**（是否返程订单）
+- **IS_AIR_FREIGHT**（是否空运）
+- **IS_INTERNATIONAL**（是否国际运输）
+- **CURRENCY**（币种）- 如：CNY、USD、EUR
+- **TEMPERATURE_REQUIREMENT**（温度要求等级）- 如：常温、冷藏、冷冻
+- **URGENCY_LEVEL**（时效要求等级）- 如：标准、加急、特快
+
 ## 领域模型特点
 
 1. **高度可配置**：支持动态配置计费规则，无需修改代码
@@ -283,3 +442,98 @@ BillingTemplate 1:N BillingItem
   - 时效加急费
 要素：{weight: 100kg, distance: 500km, temperature: "-18℃", urgency: "次日达"}
 ```
+
+### 场景3：仓储费用计算
+```
+模板：标准仓储费用模板
+维度：{warehouseType: "普通仓", customerLevel: "VIP"}
+项目：
+  - 基础仓储费（按面积 * 天数）
+  - 进仓操作费（按进仓次数）
+  - 出仓操作费（按出仓次数）
+要素：{storageArea: 100m², storageDays: 30, inboundCount: 5, outboundCount: 3}
+```
+
+### 场景4：增值服务费用计算
+```
+模板：增值服务费用模板
+维度：{serviceType: "加急", deliveryTimeSlot: "夜间"}
+项目：
+  - 基础服务费
+  - 加急服务费（根据时效等级）
+  - 夜间配送费
+  - 上楼服务费（根据楼层）
+要素：{timeType: "次日达", isNightDelivery: true, upstairsFloor: 5}
+```
+
+## 计费因子和维度使用说明
+
+### 计费因子（Factor）的使用
+
+计费因子是参与计费计算的实际数值，在创建 `BillingFactor` 实体时，建议使用 `FactorCodeEnum` 中定义的编码：
+
+```java
+// 创建重量因子
+BillingFactor weightFactor = new BillingFactor();
+weightFactor.setFactorCode(FactorCodeEnum.WEIGHT.getCode());
+weightFactor.setFactorName(FactorCodeEnum.WEIGHT.getName());
+weightFactor.setFactorType(FactorCodeEnum.WEIGHT.getFactorType().getCode());
+weightFactor.setUnit(FactorCodeEnum.WEIGHT.getUnit());
+```
+
+在计费公式中使用因子：
+```json
+{
+  "formulaExpression": "basePrice + unitPrice * WEIGHT",
+  "inputFactors": ["WEIGHT", "DISTANCE"]
+}
+```
+
+### 计费维度（Dimension）的使用
+
+计费维度用于匹配计费模板，在创建 `BillingDimension` 实体时，建议使用 `DimensionCodeEnum` 中定义的编码：
+
+```java
+// 创建地区维度
+BillingDimension regionDimension = new BillingDimension();
+regionDimension.setDimensionCode(DimensionCodeEnum.ORIGIN_REGION.getCode());
+regionDimension.setDimensionName(DimensionCodeEnum.ORIGIN_REGION.getName());
+```
+
+在计费模板中配置维度匹配条件：
+```json
+{
+  "dimensionConfig": {
+    "ORIGIN_REGION": ["华东", "华南"],
+    "CUSTOMER_LEVEL": ["VIP", "普通"],
+    "TRANSPORT_ROUTE": ["省内", "跨省"]
+  }
+}
+```
+
+### 因子与维度的区别
+
+- **计费因子（Factor）**：用于计算费用，是数值型的输入参数，如重量、距离、体积等
+- **计费维度（Dimension）**：用于匹配模板，是条件型的筛选参数，如地区、客户等级、商品类型等
+
+在计费流程中：
+1. 首先通过**维度**匹配到合适的计费模板
+2. 然后使用**因子**的数值通过公式计算费用
+
+### 扩展新的因子或维度
+
+如果需要添加新的计费因子或维度：
+
+1. **添加新的因子编码**：
+   - 在 `FactorCodeEnum` 中添加新的枚举项
+   - 指定因子类型、单位等信息
+   - 在数据库中创建对应的 `BillingFactor` 记录
+
+2. **添加新的维度编码**：
+   - 在 `DimensionCodeEnum` 中添加新的枚举项
+   - 在数据库中创建对应的 `BillingDimension` 记录
+   - 配置维度值（如地区列表、客户等级列表等）
+
+3. **更新文档**：
+   - 在 `DOMAIN_MODEL.md` 中更新因子和维度列表
+   - 添加使用说明和示例
